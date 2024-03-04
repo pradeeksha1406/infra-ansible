@@ -1,4 +1,5 @@
 - name: ELK Config setup
   hosts: all
+  become: true
   roles:
     - elk
