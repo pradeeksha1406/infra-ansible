@@ -1,0 +1,43 @@
+- name: Set Hostname
+  ansible.builtin.shell: set-hostname frontend
+
+- name: Installing nginx
+  ansible.builtin.dnf:
+    name: nginx
+    state: present
+
+- name: copy the Expense file
+  ansible.builtin.template:
+    src: expense.conf
+    dest: /etc/nginx/default.d/expense.conf
+
+- name: Updating nginx conif
+  ansible.builtin.template:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+
+- name: removing default frontend code
+  ansible.builtin.file:
+    path: /usr/share/nginx/html
+    state: absent
+
+- name: Creating nginx content directory
+  ansible.builtin.file:
+    path: /usr/share/nginx/html
+    state: directory
+
+- name: download and extract the frontend code
+  ansible.builtin.unarchive:
+    src: https://expense-artifacts.s3.amazonaws.com/frontend.zip
+    dest: /usr/share/nginx/html
+    remote_src: yes
+- name: starting nginx
+  ansible.builtin.systemd:
+    name: nginx
+    state: restarted
+    enabled: yes
+
+- name: Install filebeat
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: filebeat
