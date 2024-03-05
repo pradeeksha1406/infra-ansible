@@ -4,7 +4,7 @@
       dest: /etc/yum.repos.d/elastic.repo
 
 - name: Install Filebeat
-  ansible.builtin.template:
+  ansible.builtin.dnf:
     name: filebeat
     state: installed
 
