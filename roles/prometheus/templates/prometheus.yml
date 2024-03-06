@@ -28,9 +28,13 @@ scrape_configs:
     static_configs:
        - targets: ["localhost:9090"]
   - job_name: "expense"
+    ec2_sd_configs:
+      - region: eu-west-1
+        port: 9100
 
     # metrics_path defaults to '/metrics'
     # scheme defaults to 'http'.
 
-    static_configs:
-      - targets: [ "34.224.51.212:9100", "54.158.90.126:9100" ]
+#    static_configs:
+#      - targets: [ "34.224.51.212:9100", "54.158.90.126:9100" ]
+
