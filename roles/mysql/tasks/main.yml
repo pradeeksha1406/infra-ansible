@@ -2,8 +2,8 @@
   ansible.builtin.shell: set-hostname mysql
 
 
-#- name: disable 8 version of sql
-#  ansible.builtin.shell: dnf module disable mysql -y
+- name: disable 8 version of sql
+  ansible.builtin.shell: dnf module disable mysql -y
 
 
 - name: Copy repo file
