@@ -1,5 +1,5 @@
 groups:
-  - name: Infra alerts
+  - name: Infra alerts_Sever
     rules:
       - alert: ServerDownAlert
         expr: up == 0
@@ -11,7 +11,7 @@ groups:
 
   - name: Infra alerts
     rules:
-      - alert: ServiceDownAlert
+      - alert: ServiceDownAlert_Service
         expr: up ! == 1
         for: 1m
         labels:
