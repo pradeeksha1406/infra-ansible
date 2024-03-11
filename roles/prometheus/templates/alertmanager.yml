@@ -3,7 +3,7 @@ route:
   group_wait: 30s
   group_interval: 5m
   repeat_interval: 1h
-  receiver: 'web.hook'
+  receiver: 'email'
 
 receivers:
   - name: "email"
@@ -15,9 +15,3 @@ receivers:
         auth_password: {{ lookup('aws_ssm', 'prometheus.email.paasword', region='us-east-1' ) }}
         require_tls: true
 
-inhibit_rules:
-  - source_match:
-      severity: 'critical'
-    target_match:
-      severity: 'warning'
-    equal: ['alertname', 'dev', 'instance']

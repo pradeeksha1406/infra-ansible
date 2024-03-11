@@ -40,7 +40,7 @@
 - name: Install filebeat
   ansible.builtin.import_role:
     name: elk
-    tasks_from: filebeat
+    tasks_from: fileb
 
 - name: Install Node exporter
   ansible.builtin.import_role:
