@@ -9,7 +9,8 @@ groups:
         annotations:
           summary: Server Down Alert
 
-
+  - name: Infra alerts
+    rules:
       - alert: ServiceDownAlert
         expr: up ! == 1
         for: 1m
