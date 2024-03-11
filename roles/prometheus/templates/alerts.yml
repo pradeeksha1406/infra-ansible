@@ -9,12 +9,3 @@ groups:
         annotations:
           summary: Server Down Alert
 
-  - name: Infra alerts
-    rules:
-      - alert: ServiceDownAlert
-        expr: up == 0
-        for: 1m
-        labels:
-          severity: critical
-        annotations:
-          summary: Service Down Alert
