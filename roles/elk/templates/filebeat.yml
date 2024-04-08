@@ -168,10 +168,10 @@ output.logstash:
     #ssl.key: "/etc/pki/client/cert.key"
 
     # ================================= Processors =================================
-    #processors:
-drop_fields:
-ignore_missing: true
-fields:
+processors:
+  - drop_fields:
+      ignore_missing: true
+      fields:
         - agent.ephemeral_id
         - agent.id
         - agent.name
