@@ -1,27 +1,19 @@
-#- name: verify nodejs
-#  ansible.builtin.shell: type npm
-#  register: npm
-#  ignore_errors: yes
-
-#- name: Read npm
-#  ansible.builtin.debug:
-#    msg: "{{ npm }}"
 - name: Set Hostname
   ansible.builtin.shell: set-hostname backend
 
-- name: disable existing nodejs
-  ansible.builtin.shell: dnf module disable nodejs -y
-#  when: npm.rc !=0
+- name: Verify NodeJS
+  ansible.builtin.shell: type npm
+  register: npm
+  ignore_errors: yes
 
-- name: Enable nodejs
-  ansible.builtin.shell: dnf module enable nodejs:18 -y
-#  when: npm.rc !=0
+- name: Install NodeJS
+  ansible.builtin.shell: curl -sL https://rpm.nodesource.com/setup_lts.x | bash
+  when: npm.rc != 0
 
-- name: Installing NodeJs
+- name: Install NodeJS
   ansible.builtin.dnf:
     name: nodejs
-    state: present
-#    when: npm.rc !=0
+  when: npm.rc != 0
 
 - name: copy backend service
   ansible.builtin.template:
@@ -32,30 +24,33 @@
   ansible.builtin.user:
     name: expense
 
-- name: removing default backend code
-  ansible.builtin.file:
-    path: /app
-    state: absent
+#- name: removing default backend code
+#  ansible.builtin.file:
+#    path: /app
+#    state: absent
 
-- name: Creating  directory
-  ansible.builtin.file:
-    path: /app
-    state: directory
-- name: download and extract the backend code
-  ansible.builtin.unarchive:
-    src: https://expense-artifacts.s3.amazonaws.com/backend.zip
-    dest: /app
-    remote_src: yes
+#- name: Creating  directory
+#  ansible.builtin.file:
+#    path: /app
+#    state: directory
+
+- name: Include App Pre-requisites
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: app_prereq
 
 - name: Install NodeJs dependecies
   ansible.builtin.shell: npm install
   args:
     chdir: /app
+
 - name: Install MYSQL client
   ansible.builtin.dnf:
     name: mysql
+
 - name: load the schema
   ansible.builtin.shell: mysql -h {{ lookup('aws_ssm', '{{env}}.rds.endpoint', region='us-east-1' ) }} -u{{ lookup('aws_ssm', '{{env}}.rds.master_username', region='us-east-1' ) }} -p{{ lookup('aws_ssm', '{{env}}.rds.master_password', region='us-east-1' ) }} < /app/schema/backend.sql
+
 - name: starting backed service
   ansible.builtin.systemd:
     name: backend
