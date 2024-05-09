@@ -16,6 +16,6 @@
 
 - name: Download backend Code and Extract it
   ansible.builtin.unarchive:
-    src: http://admin:Admin@123@artifactory.techadda.co/artifactory/{{ component }}/{{ component }}-{{ lookup('aws_ssm', '{{component}}.app_version', region='us-east-1' ) }}.t5-arti.zip
+    src: http://admin:Admin@123@artifactory.techadda.co/artifactory/{{ component }}/{{ component }}-{{ lookup('aws_ssm', '{{ component }}.app_version', region='us-east-1' ) }}.t5-arti.zip
     dest: "{{ app_loc }}"
     remote_src: yes
